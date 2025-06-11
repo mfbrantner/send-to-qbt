@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Send to qBittorrent
+Exec=/path/to/your/send-to-qbt %u
+Terminal=false
+MimeType=application/x-bittorrent;x-scheme-handler/magnet;
