@@ -48,7 +48,6 @@ impl Config {
         {
             let home = std::env::var("HOME")?;
             let path = format!("{}/.config/send-to-qbt/.env", home);
-            dbg!(&path);
             dotenv::from_path(path)
                 .map_err(|e| anyhow!(format!("Could not open .env file: {}", e)))?;
         }
