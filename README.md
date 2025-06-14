@@ -11,7 +11,7 @@ USERNAME="qbt_username"
 PASSWORD="qbt_password"
 ```
 
-Make sure to make the file permissions as restrictive as possible, as to not leak your credentials.
+Make sure to make the file permissions as restrictive as possible to avoid leaking your credentials.
 
 ---
 
@@ -32,7 +32,7 @@ The program should now show up in the app launcher.
 Setting up Firefox to let me select a program to handle `magnet` links was not really that straightforward :/
 You might have to add `network.protocol-handler.expose.magnet` to `about:config` and set it to `false`.
 
-When clicking a `magnet` link, Firfox should now ask which program to use.
+When clicking a `magnet` link, Firefox should now ask which program to use.
 Now, select "Send to qBittorrent" from the list.
 
 If everything works, the same notification as before should pop up.
