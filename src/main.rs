@@ -4,7 +4,7 @@ use qbittorrent_rust::{
     core::{api::QbitApi, creds::Credentials},
     *,
 };
-use std::env;
+use std::{env, path::PathBuf};
 use tokio;
 
 // given the API object and the torrent URI, adds the torrent with default options
@@ -33,31 +33,21 @@ struct Config {
 }
 
 impl Config {
-    // creates the config from a .env file
-    // in a debug build, it will look for the .env file in the cwd of the process
-    // in a release build, it will try to find the .env file at $HOME/.config/send-to-qbt/.env
-    // I'm pretty sure that this is not the right way to do it, but i just need this to work for me
-    fn from_dotenv() -> Result<Config> {
-        #[cfg(debug_assertions)]
-        {
-            dotenv::dotenv()
-                .map_err(|e| anyhow!(format!("[Debug] Could not open .env file: {}", e)))?;
-        }
+    // expects config file at $HOME/.config/send-to-qbt/config.toml
+    fn from_toml() -> Result<Config> {
+        let home = env::var("HOME")?;
+        let path = PathBuf::from(format!("{}/.config/send-to-qbt/config.toml", home));
 
-        #[cfg(not(debug_assertions))]
-        {
-            let home = std::env::var("HOME")?;
-            let path = format!("{}/.config/send-to-qbt/.env", home);
-            dotenv::from_path(path)
-                .map_err(|e| anyhow!(format!("Could not open .env file: {}", e)))?;
-        }
+        let settings = config::Config::builder()
+            .add_source(config::File::from(path))
+            .build()?;
 
-        let username = env::var("USERNAME")?;
-        let password = env::var("PASSWORD")?;
-        let host_name = env::var("HOST_NAME")?;
+        let username = settings.get_string("username")?;
+        let password = settings.get_string("password")?;
+        let host_name = settings.get_string("host_name")?;
         Ok(Config {
             creds: Credentials::new(username, password),
-            host_name: host_name,
+            host_name,
         })
     }
 }
@@ -92,7 +82,8 @@ async fn add_to_qbt() -> Result<()> {
     let uri = get_uri()?;
 
     // check .env ($HOME/.config/send-to-qbt/.env)
-    let config = Config::from_dotenv()?;
+    //let config = Config::from_dotenv()?;
+    let config = Config::from_toml()?;
 
     // instantiate API
     let mut api = QbitApi::new(config.host_name, config.creds)

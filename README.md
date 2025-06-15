@@ -4,11 +4,11 @@ My main use case for this is to be able to click on `magnet` links in Firefox an
 
 ## Setup
 
-Create the file `$HOME/.config/send-to-qbt/.env` and add your credentials:
+Create the file `$HOME/.config/send-to-qbt/config.toml` and add your credentials:
 ```
-HOST_NAME="localhost"
-USERNAME="qbt_username"
-PASSWORD="qbt_password"
+host_name = "localhost"
+username = "qbt_username"
+password = "qbt_password"
 ```
 
 Make sure to make the file permissions as restrictive as possible to avoid leaking your credentials.
@@ -24,6 +24,7 @@ If it is set up correctly, it should display a desktop notification saying the t
 ---
 
 Copy the `send-to-qbt.desktop` file to `$HOME/.local/share/applications/` and make sure the `Exec` points to the binary.
+I put a symlink to the release build of the program in `~/.local/bin/`.
 Then, run `update-desktop-database $HOME/.local/share/applications`.
 The program should now show up in the app launcher.
 
